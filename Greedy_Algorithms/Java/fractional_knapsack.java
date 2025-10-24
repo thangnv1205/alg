@@ -17,6 +17,10 @@ public class fractional_knapsack {
             this.ratio = (double) value / weight;
         }
 
+        public double getRatio() {
+            return ratio;
+        }
+
         @Override
         public String toString() {
             return "(W:" + weight + ", V:" + value + ", R:" + String.format("%.2f", ratio) + ")";
@@ -25,7 +29,7 @@ public class fractional_knapsack {
 
     public static double fractionalKnapsack(int W, List<Item> items) {
         // Sắp xếp các vật phẩm theo tỷ lệ giá trị/trọng lượng giảm dần
-        Collections.sort(items, Comparator.comparingDouble(item -> item.ratio).reversed());
+        Collections.sort(items, Comparator.comparingDouble(Item::getRatio).reversed());
 
         double finalValue = 0.0;
 
