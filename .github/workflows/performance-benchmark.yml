@@ -1,0 +1,246 @@
+name: Performance Benchmark
+
+on:
+  schedule:
+    - cron: '0 2 * * 0'  # Run every Sunday at 2 AM
+  workflow_dispatch:
+    inputs:
+      benchmark_type:
+        description: 'Type of benchmark to run'
+        required: true
+        default: 'comprehensive'
+        type: choice
+        options:
+          - comprehensive
+          - sorting
+          - searching
+          - graph
+          - machine-learning
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        language: [javascript, python, java, c, cpp, go, rust, scala]
+        test_size: [small, medium, large]
+        
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Setup environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential nasm
+
+      - name: Setup ${{ matrix.language }}
+        run: |
+          case "${{ matrix.language }}" in
+            "javascript")
+              # Node.js is already set up
+              ;;
+            "python")
+              sudo apt-get install -y python3 python3-pip
+              ;;
+            "java")
+              sudo apt-get install -y openjdk-17-jdk
+              ;;
+            "c"|"cpp")
+              sudo apt-get install -y gcc g++ make
+              ;;
+            "go")
+              wget https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
+              sudo tar -C /usr/local -xzf go1.21.0.linux-amd64.tar.gz
+              echo '/usr/local/go/bin' >> $GITHUB_PATH
+              ;;
+            "rust")
+              curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+              echo '$HOME/.cargo/bin' >> $GITHUB_PATH
+              ;;
+            "scala")
+              sudo apt-get install -y openjdk-17-jdk
+              wget https://downloads.lightbend.com/scala/2.13.11/scala-2.13.11.tgz
+              tar -xzf scala-2.13.11.tgz
+              sudo mv scala-2.13.11 /opt/scala
+              echo '/opt/scala/bin' >> $GITHUB_PATH
+              ;;
+          esac
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Create benchmark directories
+        run: |
+          mkdir -p benchmark-results
+          mkdir -p build
+
+      - name: Run benchmark for ${{ matrix.language }}
+        run: |
+          echo "Running benchmark for ${{ matrix.language }} with ${{ matrix.test_size }} test size..."
+          
+          # Set test parameters based on size
+          case "${{ matrix.test_size }}" in
+            "small")
+              TEST_SIZES="10,100,1000"
+              ITERATIONS=3
+              ;;
+            "medium")
+              TEST_SIZES="100,1000,10000"
+              ITERATIONS=5
+              ;;
+            "large")
+              TEST_SIZES="1000,10000,100000"
+              ITERATIONS=10
+              ;;
+          esac
+          
+          # Run performance analysis
+          node scripts/performance_analyzer.js \
+            --language ${{ matrix.language }} \
+            --test-sizes "$TEST_SIZES" \
+            --iterations $ITERATIONS \
+            --output "benchmark-results/${{ matrix.language }}-${{ matrix.test_size }}.json"
+
+      - name: Generate benchmark report
+        run: |
+          echo "# 🏆 Performance Benchmark Report" > benchmark-report.md
+          echo "**Language:** ${{ matrix.language }}" >> benchmark-report.md
+          echo "**Test Size:** ${{ matrix.test_size }}" >> benchmark-report.md
+          echo "**Generated:** $(date)" >> benchmark-report.md
+          echo "" >> benchmark-report.md
+          
+          if [ -f "benchmark-results/${{ matrix.language }}-${{ matrix.test_size }}.json" ]; then
+            echo "## Results" >> benchmark-report.md
+            echo '```json' >> benchmark-report.md
+            cat "benchmark-results/${{ matrix.language }}-${{ matrix.test_size }}.json" >> benchmark-report.md
+            echo '```' >> benchmark-report.md
+          else
+            echo "No benchmark results available." >> benchmark-report.md
+          fi
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-${{ matrix.language }}-${{ matrix.test_size }}
+          path: |
+            benchmark-results/
+            benchmark-report.md
+          retention-days: 30
+
+  aggregate-results:
+    needs: [benchmark]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Download all benchmark artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: benchmark-artifacts
+
+      - name: Aggregate benchmark results
+        run: |
+          echo "# 🎯 Comprehensive Benchmark Analysis" > comprehensive-benchmark.md
+          echo "Generated on: $(date)" >> comprehensive-benchmark.md
+          echo "" >> comprehensive-benchmark.md
+          
+          # Create summary table
+          echo "## Performance Summary" >> comprehensive-benchmark.md
+          echo "" >> comprehensive-benchmark.md
+          echo "| Language | Small | Medium | Large | Average |" >> comprehensive-benchmark.md
+          echo "|----------|-------|--------|-------|---------|" >> comprehensive-benchmark.md
+          
+          # Process each language
+          for lang in javascript python java c cpp go rust scala; do
+            echo "Processing $lang..."
+            
+            SMALL_TIME="N/A"
+            MEDIUM_TIME="N/A"
+            LARGE_TIME="N/A"
+            
+            # Extract times from JSON files
+            if [ -f "benchmark-artifacts/benchmark-$lang-small/benchmark-results/$lang-small.json" ]; then
+              SMALL_TIME=$(node -e "
+                const fs = require('fs');
+                const data = JSON.parse(fs.readFileSync('benchmark-artifacts/benchmark-$lang-small/benchmark-results/$lang-small.json', 'utf8'));
+                console.log(data.performance?.averageTime?.toFixed(2) || 'N/A');
+              ")
+            fi
+            
+            if [ -f "benchmark-artifacts/benchmark-$lang-medium/benchmark-results/$lang-medium.json" ]; then
+              MEDIUM_TIME=$(node -e "
+                const fs = require('fs');
+                const data = JSON.parse(fs.readFileSync('benchmark-artifacts/benchmark-$lang-medium/benchmark-results/$lang-medium.json', 'utf8'));
+                console.log(data.performance?.averageTime?.toFixed(2) || 'N/A');
+              ")
+            fi
+            
+            if [ -f "benchmark-artifacts/benchmark-$lang-large/benchmark-results/$lang-large.json" ]; then
+              LARGE_TIME=$(node -e "
+                const fs = require('fs');
+                const data = JSON.parse(fs.readFileSync('benchmark-artifacts/benchmark-$lang-large/benchmark-results/$lang-large.json', 'utf8'));
+                console.log(data.performance?.averageTime?.toFixed(2) || 'N/A');
+              ")
+            fi
+            
+            # Calculate average
+            AVG_TIME="N/A"
+            if [ "$SMALL_TIME" != "N/A" ] && [ "$MEDIUM_TIME" != "N/A" ] && [ "$LARGE_TIME" != "N/A" ]; then
+              AVG_TIME=$(node -e "console.log(((parseFloat('$SMALL_TIME') + parseFloat('$MEDIUM_TIME') + parseFloat('$LARGE_TIME')) / 3).toFixed(2))")
+            fi
+            
+            echo "| $lang | ${SMALL_TIME}ms | ${MEDIUM_TIME}ms | ${LARGE_TIME}ms | ${AVG_TIME}ms |" >> comprehensive-benchmark.md
+          done
+          
+          echo "" >> comprehensive-benchmark.md
+          echo "## Detailed Results" >> comprehensive-benchmark.md
+          echo "" >> comprehensive-benchmark.md
+          
+          # Add detailed results for each language
+          for artifact in benchmark-artifacts/*/; do
+            if [ -d "$artifact" ]; then
+              lang_size=$(basename "$artifact" | sed 's/benchmark-//')
+              echo "### $lang_size" >> comprehensive-benchmark.md
+              echo "" >> comprehensive-benchmark.md
+              
+              if [ -f "$artifact/benchmark-report.md" ]; then
+                cat "$artifact/benchmark-report.md" >> comprehensive-benchmark.md
+              fi
+              echo "" >> comprehensive-benchmark.md
+            fi
+          done
+
+      - name: Upload comprehensive benchmark report
+        uses: actions/upload-artifact@v4
+        with:
+          name: comprehensive-benchmark-report
+          path: comprehensive-benchmark.md
+          retention-days: 90
+
+      - name: Create GitHub Release
+        if: github.event_name == 'schedule'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: benchmark-${{ github.run_number }}
+          name: "Weekly Performance Benchmark"
+          body_path: comprehensive-benchmark.md
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

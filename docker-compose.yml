@@ -1,0 +1,124 @@
+version: '3.8'
+
+services:
+  # Main API service
+  algorithms-api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.all
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./algorithms:/app/algorithms
+      - ./results:/app/results
+      - ./build:/app/build
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    command: ["node", "scripts/api_server.js"]
+    depends_on:
+      - redis
+      - postgres
+
+  # Worker service for background processing
+  algorithms-worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.all
+    volumes:
+      - ./algorithms:/app/algorithms
+      - ./results:/app/results
+      - ./build:/app/build
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/algorithms
+    command: ["node", "scripts/worker.js"]
+    depends_on:
+      - redis
+      - postgres
+
+  # Performance analysis service
+  performance-analyzer:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.all
+    volumes:
+      - ./algorithms:/app/algorithms
+      - ./results:/app/results
+      - ./build:/app/build
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=redis://redis:6379
+    command: ["node", "scripts/performance_analyzer.js", "--continuous"]
+    depends_on:
+      - redis
+
+  # Redis for caching and job queue
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
+  # PostgreSQL for storing results
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=algorithms
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Nginx for load balancing
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - algorithms-api
+
+  # Monitoring with Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+
+  # Grafana for visualization
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+volumes:
+  redis_data:
+  postgres_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  default:
+    name: algorithms-network

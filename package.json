@@ -1,0 +1,81 @@
+{
+  "name": "algorithms-collection",
+  "version": "1.0.0",
+  "description": "A comprehensive collection of algorithms implemented in multiple programming languages",
+  "main": "index.js",
+  "scripts": {
+    "test": "node scripts/test_runner.js",
+    "benchmark": "node scripts/benchmark_runner.js",
+    "run-all": "node scripts/run_all.js",
+    "setup": "npm install && node scripts/setup_environment.js",
+    "setup-check": "node scripts/setup_environment.js --skip-checks",
+    "clean": "node scripts/clean.js",
+    "build": "node scripts/build.js",
+    "run-js": "node scripts/run_all.js --languages javascript",
+    "run-python": "node scripts/run_all.js --languages python",
+    "run-java": "node scripts/run_all.js --languages java",
+    "run-c": "node scripts/run_all.js --languages c",
+    "run-cpp": "node scripts/run_all.js --languages cpp",
+    "run-asm": "node scripts/run_all.js --languages assembly",
+    "run-csharp": "node scripts/run_all.js --languages csharp",
+    "run-dart": "node scripts/run_all.js --languages dart",
+    "run-elixir": "node scripts/run_all.js --languages elixir",
+    "run-erlang": "node scripts/run_all.js --languages erlang",
+    "run-go": "node scripts/run_all.js --languages go",
+    "run-kotlin": "node scripts/run_all.js --languages kotlin",
+    "run-php": "node scripts/run_all.js --languages php",
+    "run-racket": "node scripts/run_all.js --languages racket",
+    "run-ruby": "node scripts/run_all.js --languages ruby",
+    "run-rust": "node scripts/run_all.js --languages rust",
+    "run-scala": "node scripts/run_all.js --languages scala",
+    "run-swift": "node scripts/run_all.js --languages swift",
+    "run-typescript": "node scripts/run_all.js --languages typescript",
+    "docker-build": "node scripts/docker_builder.js",
+    "docker-build-all": "node scripts/docker_builder.js --languages all",
+    "docker-build-push": "node scripts/docker_builder.js --push",
+    "docker-test": "node scripts/docker_builder.js --test",
+    "docker-clean": "node scripts/docker_builder.js --clean",
+    "docker-compose": "docker-compose up -d",
+    "docker-compose-down": "docker-compose down",
+    "docker-compose-logs": "docker-compose logs -f",
+    "docker-compose-build": "docker-compose build",
+    "docker-compose-pull": "docker-compose pull",
+    "check-languages": "node scripts/language_checker.js",
+    "check-languages-report": "node scripts/language_checker.js --report",
+    "check-languages-instructions": "node scripts/language_checker.js --instructions",
+    "check-languages-verbose": "node scripts/language_checker.js --verbose"
+  },
+  "keywords": [
+    "algorithms",
+    "data-structures",
+    "computer-science",
+    "programming",
+    "sorting",
+    "searching",
+    "graph",
+    "dynamic-programming"
+  ],
+  "author": "Algorithm Collection Team",
+  "license": "MIT",
+  "devDependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^9.4.1",
+    "glob": "^8.1.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "ora": "^5.4.1",
+    "table": "^6.8.1"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/algorithms-collection.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/algorithms-collection/issues"
+  },
+  "homepage": "https://github.com/your-username/algorithms-collection#readme"
+}

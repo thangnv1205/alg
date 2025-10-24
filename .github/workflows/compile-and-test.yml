@@ -1,0 +1,510 @@
+name: Compile and Test All Languages
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      languages:
+        description: 'Languages to test (comma-separated)'
+        required: false
+        default: 'all'
+      test_size:
+        description: 'Test size for performance analysis'
+        required: false
+        default: 'medium'
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up matrix
+        id: set-matrix
+        run: |
+          if [ "${{ github.event.inputs.languages }}" = "all" ] || [ -z "${{ github.event.inputs.languages }}" ]; then
+            echo "matrix={\"language\":[\"javascript\",\"python\",\"java\",\"c\",\"cpp\",\"csharp\",\"dart\",\"elixir\",\"erlang\",\"go\",\"kotlin\",\"php\",\"racket\",\"ruby\",\"rust\",\"scala\",\"swift\",\"typescript\",\"assembly\"]}" >> $GITHUB_OUTPUT
+          else
+            IFS=',' read -ra LANGUAGES <<< "${{ github.event.inputs.languages }}"
+            LANG_JSON=$(printf '%s\n' "${LANGUAGES[@]}" | jq -R . | jq -s .)
+            echo "matrix={\"language\":$LANG_JSON}" >> $GITHUB_OUTPUT
+          fi
+
+  compile-and-test:
+    needs: setup
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: javascript
+            os: ubuntu-latest
+            setup: node
+          - language: python
+            os: ubuntu-latest
+            setup: python
+          - language: java
+            os: ubuntu-latest
+            setup: java
+          - language: c
+            os: ubuntu-latest
+            setup: c
+          - language: cpp
+            os: ubuntu-latest
+            setup: cpp
+          - language: csharp
+            os: ubuntu-latest
+            setup: csharp
+          - language: dart
+            os: ubuntu-latest
+            setup: dart
+          - language: elixir
+            os: ubuntu-latest
+            setup: elixir
+          - language: erlang
+            os: ubuntu-latest
+            setup: erlang
+          - language: go
+            os: ubuntu-latest
+            setup: go
+          - language: kotlin
+            os: ubuntu-latest
+            setup: kotlin
+          - language: php
+            os: ubuntu-latest
+            setup: php
+          - language: racket
+            os: ubuntu-latest
+            setup: racket
+          - language: ruby
+            os: ubuntu-latest
+            setup: ruby
+          - language: rust
+            os: ubuntu-latest
+            setup: rust
+          - language: scala
+            os: ubuntu-latest
+            setup: scala
+          - language: swift
+            os: macos-latest
+            setup: swift
+          - language: typescript
+            os: ubuntu-latest
+            setup: typescript
+          - language: assembly
+            os: ubuntu-latest
+            setup: assembly
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        if: matrix.setup == 'node'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Setup Python
+        if: matrix.setup == 'python'
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Setup Java
+        if: matrix.setup == 'java'
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup C/C++
+        if: matrix.setup == 'c' || matrix.setup == 'cpp'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc g++ make
+
+      - name: Setup C#
+        if: matrix.setup == 'csharp'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Setup Dart
+        if: matrix.setup == 'dart'
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Setup Elixir
+        if: matrix.setup == 'elixir'
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.15.7'
+          otp-version: '26.0'
+
+      - name: Setup Erlang
+        if: matrix.setup == 'erlang'
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: '26.0'
+
+      - name: Setup Go
+        if: matrix.setup == 'go'
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Setup Kotlin
+        if: matrix.setup == 'kotlin'
+        uses: fwilhe2/setup-kotlin@v1
+        with:
+          kotlin-version: '1.9.0'
+
+      - name: Setup PHP
+        if: matrix.setup == 'php'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Setup Racket
+        if: matrix.setup == 'racket'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y racket
+
+      - name: Setup Ruby
+        if: matrix.setup == 'ruby'
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Setup Rust
+        if: matrix.setup == 'rust'
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Setup Scala
+        if: matrix.setup == 'scala'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jdk
+          wget https://downloads.lightbend.com/scala/2.13.11/scala-2.13.11.tgz
+          tar -xzf scala-2.13.11.tgz
+          sudo mv scala-2.13.11 /opt/scala
+          echo '/opt/scala/bin' >> $GITHUB_PATH
+
+      - name: Setup Swift
+        if: matrix.setup == 'swift'
+        uses: swift-actions/setup-swift@v1
+        with:
+          swift-version: '5.9'
+
+      - name: Setup TypeScript
+        if: matrix.setup == 'typescript'
+        run: |
+          npm install -g typescript
+
+      - name: Setup Assembly
+        if: matrix.setup == 'assembly'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nasm gcc
+
+      - name: Install Node.js dependencies
+        if: matrix.language == 'javascript' || matrix.language == 'typescript'
+        run: npm install
+
+      - name: Create build directories
+        run: |
+          mkdir -p build
+          mkdir -p test-results
+
+      - name: Compile ${{ matrix.language }} files
+        id: compile
+        run: |
+          echo "Compiling ${{ matrix.language }} files..."
+          
+          case "${{ matrix.language }}" in
+            "javascript")
+              echo "No compilation needed for JavaScript"
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "python")
+              echo "No compilation needed for Python"
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "java")
+              find . -name "*.java" -not -path "./docker/*" -exec javac -d build {} \;
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "c")
+              find . -name "*.c" -not -path "./docker/*" -exec gcc -o build/{} {} \;
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "cpp")
+              find . -name "*.cpp" -not -path "./docker/*" -exec g++ -o build/{} {} \;
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "csharp")
+              find . -name "*.cs" -not -path "./docker/*" -exec csc -out:build/{} {} \;
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "dart")
+              echo "No compilation needed for Dart"
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "elixir")
+              echo "No compilation needed for Elixir"
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "erlang")
+              echo "No compilation needed for Erlang"
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "go")
+              find . -name "*.go" -not -path "./docker/*" -exec go build -o build/{} {} \;
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "kotlin")
+              find . -name "*.kt" -not -path "./docker/*" -exec kotlinc -include-runtime -d build/{} {} \;
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "php")
+              echo "No compilation needed for PHP"
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "racket")
+              echo "No compilation needed for Racket"
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "ruby")
+              echo "No compilation needed for Ruby"
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "rust")
+              find . -name "*.rs" -not -path "./docker/*" -exec rustc -o build/{} {} \;
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "scala")
+              find . -name "*.scala" -not -path "./docker/*" -exec scalac -d build {} \;
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "swift")
+              find . -name "*.swift" -not -path "./docker/*" -exec swiftc -o build/{} {} \;
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "typescript")
+              find . -name "*.ts" -not -path "./docker/*" -exec tsc {} \;
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            "assembly")
+              find . -name "*.asm" -not -path "./docker/*" -exec nasm -f elf64 {} -o build/{}.o \;
+              find build -name "*.o" -exec gcc -o build/asm_program {} \;
+              echo "success=true" >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "Unknown language: ${{ matrix.language }}"
+              echo "success=false" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
+      - name: Run ${{ matrix.language }} tests
+        if: steps.compile.outputs.success == 'true'
+        run: |
+          echo "Running ${{ matrix.language }} tests..."
+          
+          case "${{ matrix.language }}" in
+            "javascript")
+              find . -name "*.js" -not -path "./node_modules/*" -not -path "./scripts/*" -exec node {} \;
+              ;;
+            "python")
+              find . -name "*.py" -not -path "./scripts/*" -exec python3 {} \;
+              ;;
+            "java")
+              find build -name "*.class" -exec java -cp build {} \;
+              ;;
+            "c"|"cpp")
+              find build -name "*.${{ matrix.language }}" -exec {} \;
+              ;;
+            "csharp")
+              find build -name "*.exe" -exec {} \;
+              ;;
+            "dart")
+              find . -name "*.dart" -not -path "./scripts/*" -exec dart {} \;
+              ;;
+            "elixir")
+              find . -name "*.ex" -not -path "./scripts/*" -exec elixir {} \;
+              ;;
+            "erlang")
+              find . -name "*.erl" -not -path "./scripts/*" -exec erl -noshell -eval "c:l({}), halt()." {} \;
+              ;;
+            "go")
+              find build -name "*.go" -exec {} \;
+              ;;
+            "kotlin")
+              find build -name "*.jar" -exec java -jar {} \;
+              ;;
+            "php")
+              find . -name "*.php" -not -path "./scripts/*" -exec php {} \;
+              ;;
+            "racket")
+              find . -name "*.rkt" -not -path "./scripts/*" -exec racket {} \;
+              ;;
+            "ruby")
+              find . -name "*.rb" -not -path "./scripts/*" -exec ruby {} \;
+              ;;
+            "rust")
+              find build -name "*.rs" -exec {} \;
+              ;;
+            "scala")
+              find build -name "*.class" -exec scala -cp build {} \;
+              ;;
+            "swift")
+              find build -name "*.swift" -exec {} \;
+              ;;
+            "typescript")
+              find . -name "*.js" -not -path "./node_modules/*" -not -path "./scripts/*" -exec node {} \;
+              ;;
+            "assembly")
+              find build -name "asm_program" -exec {} \;
+              ;;
+          esac
+
+      - name: Performance Analysis
+        if: steps.compile.outputs.success == 'true'
+        run: |
+          echo "Running performance analysis for ${{ matrix.language }}..."
+          node scripts/performance_analyzer.js --language ${{ matrix.language }} --test-size ${{ github.event.inputs.test_size || 'medium' }} > test-results/${{ matrix.language }}-performance.txt 2>&1 || true
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.language }}
+          path: |
+            test-results/
+            build/
+          retention-days: 7
+
+      - name: Upload performance report
+        if: steps.compile.outputs.success == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-report-${{ matrix.language }}
+          path: test-results/${{ matrix.language }}-performance.txt
+          retention-days: 30
+
+  performance-analysis:
+    needs: [compile-and-test]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Generate comprehensive performance report
+        run: |
+          echo "# 🚀 Algorithm Performance Analysis Report" > performance-report.md
+          echo "Generated on: $(date)" >> performance-report.md
+          echo "" >> performance-report.md
+          
+          for artifact in artifacts/*/; do
+            if [ -d "$artifact" ]; then
+              lang=$(basename "$artifact" | sed 's/test-results-//')
+              echo "## $lang Performance" >> performance-report.md
+              echo "" >> performance-report.md
+              
+              if [ -f "$artifact/test-results/$lang-performance.txt" ]; then
+                cat "$artifact/test-results/$lang-performance.txt" >> performance-report.md
+              else
+                echo "No performance data available for $lang" >> performance-report.md
+              fi
+              echo "" >> performance-report.md
+            fi
+          done
+
+      - name: Upload comprehensive report
+        uses: actions/upload-artifact@v4
+        with:
+          name: comprehensive-performance-report
+          path: performance-report.md
+          retention-days: 90
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('performance-report.md', 'utf8');
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 📊 Performance Analysis Results\n\n${report}`
+            });
+
+  matrix-summary:
+    needs: [compile-and-test]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate matrix summary
+        run: |
+          echo "# 🎯 Build Matrix Summary" > matrix-summary.md
+          echo "Generated on: $(date)" >> matrix-summary.md
+          echo "" >> matrix-summary.md
+          echo "## Supported Languages" >> matrix-summary.md
+          echo "- JavaScript (Node.js)" >> matrix-summary.md
+          echo "- Python 3.11" >> matrix-summary.md
+          echo "- Java 17" >> matrix-summary.md
+          echo "- C (GCC)" >> matrix-summary.md
+          echo "- C++ (G++)" >> matrix-summary.md
+          echo "- C# (.NET 6)" >> matrix-summary.md
+          echo "- Dart" >> matrix-summary.md
+          echo "- Elixir" >> matrix-summary.md
+          echo "- Erlang" >> matrix-summary.md
+          echo "- Go" >> matrix-summary.md
+          echo "- Kotlin" >> matrix-summary.md
+          echo "- PHP 8.2" >> matrix-summary.md
+          echo "- Racket" >> matrix-summary.md
+          echo "- Ruby 3.2" >> matrix-summary.md
+          echo "- Rust" >> matrix-summary.md
+          echo "- Scala" >> matrix-summary.md
+          echo "- Swift" >> matrix-summary.md
+          echo "- TypeScript" >> matrix-summary.md
+          echo "- Assembly (x64)" >> matrix-summary.md
+
+      - name: Upload matrix summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: matrix-summary
+          path: matrix-summary.md
+          retention-days: 30

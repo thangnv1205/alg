@@ -1,0 +1,37 @@
+# TypeScript Environment Dockerfile
+FROM node:18-alpine
+
+# Install system dependencies
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    git
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Install TypeScript globally
+RUN npm install -g typescript
+
+# Copy source code
+COPY . .
+
+# Create build directories
+RUN mkdir -p build test-results benchmark-results
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV PATH="/app/node_modules/.bin:${PATH}"
+
+# Compile TypeScript files
+RUN find . -name "*.ts" -not -path "./node_modules/*" -not -path "./scripts/*" -exec tsc {} \;
+
+# Default command
+CMD ["tsc", "--version"]

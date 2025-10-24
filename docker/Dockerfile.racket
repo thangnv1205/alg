@@ -1,0 +1,29 @@
+# Racket Environment Dockerfile
+FROM ubuntu:22.04
+
+# Install system dependencies and Racket
+RUN apt-get update && apt-get install -y \
+    wget \
+    git \
+    make \
+    gcc \
+    && wget https://download.racket-lang.org/installers/8.10/racket-8.10-x86_64-linux-cs.sh \
+    && chmod +x racket-8.10-x86_64-linux-cs.sh \
+    && ./racket-8.10-x86_64-linux-cs.sh --unix-style --dest /usr/local \
+    && rm racket-8.10-x86_64-linux-cs.sh \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy source code
+COPY . .
+
+# Create build directories
+RUN mkdir -p build test-results benchmark-results
+
+# Set environment variables
+ENV PATH="/usr/local/bin:${PATH}"
+
+# Default command
+CMD ["racket", "--version"]
