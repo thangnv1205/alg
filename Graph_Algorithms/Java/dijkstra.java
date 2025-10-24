@@ -12,7 +12,7 @@ import java.util.*;
  * @class Dijkstra
  * @description Class containing Dijkstra's algorithm implementation
  */
-public class Dijkstra {
+public class dijkstra {
 
     /**
      * @class Edge
