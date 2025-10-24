@@ -1,0 +1,60 @@
+{
+  "name": "algorithm-collection",
+  "version": "1.0.0",
+  "description": "A comprehensive collection of algorithms implemented in Python, Java, and JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test:js",
+    "test:js": "node scripts/test_runner.js",
+    "benchmark": "npm run benchmark:js",
+    "benchmark:js": "node scripts/benchmark_runner.js",
+    "run:bubble": "node Sorting_Algorithms/bubble_sort.js",
+    "run:quick": "echo 'Quick Sort implementation coming soon...'",
+    "run:merge": "echo 'Merge Sort implementation coming soon...'",
+    "run:heap": "echo 'Heap Sort implementation coming soon...'",
+    "run:binary": "echo 'Binary Search implementation coming soon...'",
+    "run:all": "node scripts/run_all.js",
+    "lint": "eslint **/*.js",
+    "lint:fix": "eslint **/*.js --fix",
+    "format": "prettier --write **/*.js",
+    "clean": "rimraf build/ dist/",
+    "build": "npm run clean && npm run lint && npm run test"
+  },
+  "keywords": [
+    "algorithms",
+    "data-structures",
+    "sorting",
+    "searching",
+    "graph-algorithms",
+    "dynamic-programming",
+    "machine-learning",
+    "cryptography",
+    "compression"
+  ],
+  "author": "Algorithm Collection",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0",
+    "rimraf": "^5.0.0",
+    "jest": "^29.0.0",
+    "benchmark": "^2.1.4"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "cli-table3": "^0.6.3",
+    "ora": "^5.4.1"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/algorithm-collection.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/algorithm-collection/issues"
+  },
+  "homepage": "https://github.com/your-username/algorithm-collection#readme"
+}
