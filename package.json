@@ -39,7 +39,11 @@
     "docker-compose-down": "docker-compose down",
     "docker-compose-logs": "docker-compose logs -f",
     "docker-compose-build": "docker-compose build",
-    "docker-compose-pull": "docker-compose pull"
+    "docker-compose-pull": "docker-compose pull",
+    "check-languages": "node scripts/language_checker.js",
+    "check-languages-report": "node scripts/language_checker.js --report",
+    "check-languages-instructions": "node scripts/language_checker.js --instructions",
+    "check-languages-verbose": "node scripts/language_checker.js --verbose"
   },
   "keywords": [
     "algorithms",
