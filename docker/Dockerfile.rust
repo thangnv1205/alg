@@ -1,0 +1,25 @@
+# Rust Environment Dockerfile
+FROM rust:1.71-alpine
+
+# Install system dependencies
+RUN apk add --no-cache \
+    git \
+    make \
+    gcc \
+    musl-dev
+
+# Set working directory
+WORKDIR /app
+
+# Copy source code
+COPY . .
+
+# Create build directories
+RUN mkdir -p build test-results benchmark-results
+
+# Set environment variables
+ENV RUST_BACKTRACE=1
+ENV CARGO_TARGET_DIR=/app/build
+
+# Default command
+CMD ["rustc", "--version"]

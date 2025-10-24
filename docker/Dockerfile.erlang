@@ -1,0 +1,24 @@
+# Erlang Environment Dockerfile
+FROM erlang:26-alpine
+
+# Install system dependencies
+RUN apk add --no-cache \
+    git \
+    make \
+    gcc \
+    musl-dev
+
+# Set working directory
+WORKDIR /app
+
+# Copy source code
+COPY . .
+
+# Create build directories
+RUN mkdir -p build test-results benchmark-results
+
+# Set environment variables
+ENV ERL_FLAGS="-kernel shell_history enabled"
+
+# Default command
+CMD ["erl", "-version"]

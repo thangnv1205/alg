@@ -1,0 +1,25 @@
+# Elixir Environment Dockerfile
+FROM elixir:1.15-alpine
+
+# Install system dependencies
+RUN apk add --no-cache \
+    git \
+    make \
+    gcc \
+    musl-dev
+
+# Set working directory
+WORKDIR /app
+
+# Copy source code
+COPY . .
+
+# Create build directories
+RUN mkdir -p build test-results benchmark-results
+
+# Set environment variables
+ENV MIX_ENV=prod
+ENV ELIXIR_ERL_OPTIONS="+fnu"
+
+# Default command
+CMD ["elixir", "--version"]

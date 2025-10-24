@@ -1,175 +1,307 @@
-# Makefile for Algorithm Collection
-# Usage: make [target]
+# Algorithms Collection Makefile
+# Supports compilation for multiple programming languages
 
-.PHONY: help install test benchmark clean run-python run-java run-js run-all
+# Compiler settings
+CC = gcc
+CXX = g++
+JAVAC = javac
+PYTHON = python3
+NODE = node
+AS = nasm
+ASM_FLAGS = -f elf64
 
-# Default target
-help:
-	@echo "Algorithm Collection - Available Commands"
-	@echo "========================================"
-	@echo ""
-	@echo "Setup:"
-	@echo "  install     - Install dependencies"
-	@echo "  clean       - Clean build artifacts"
-	@echo ""
-	@echo "Testing:"
-	@echo "  test        - Run all tests"
-	@echo "  test-js     - Run JavaScript tests"
-	@echo "  test-java   - Run Java tests"
-	@echo "  test-python - Run Python tests"
-	@echo ""
-	@echo "Benchmarking:"
-	@echo "  benchmark   - Run all benchmarks"
-	@echo "  benchmark-js - Run JavaScript benchmarks"
-	@echo ""
-	@echo "Running Algorithms:"
-	@echo "  run-python  - Run Python implementations"
-	@echo "  run-java    - Run Java implementations"
-	@echo "  run-js      - Run JavaScript implementations"
-	@echo "  run-all     - Run all implementations"
-	@echo ""
-	@echo "Specific Algorithms:"
-	@echo "  bubble-sort - Run bubble sort in all languages"
-	@echo "  quick-sort  - Run quick sort in all languages"
-	@echo "  merge-sort  - Run merge sort in all languages"
-	@echo "  heap-sort   - Run heap sort in all languages"
-	@echo "  binary-search - Run binary search in all languages"
-	@echo ""
-	@echo "Development:"
-	@echo "  lint        - Run linter"
-	@echo "  format      - Format code"
-	@echo "  build       - Build project"
+# Additional language compilers
+CSC = csc                   # C# compiler
+DART = dart                 # Dart runtime
+ELIXIR = elixir             # Elixir runtime
+ERL = erl                   # Erlang runtime
+GO = go                     # Go compiler
+KOTLIN = kotlinc            # Kotlin compiler
+PHP = php                   # PHP runtime
+RACKET = racket             # Racket runtime
+RUBY = ruby                 # Ruby runtime
+RUST = rustc                # Rust compiler
+SCALA = scalac              # Scala compiler
+SWIFT = swift               # Swift compiler
+TSC = tsc                   # TypeScript compiler
+
+# Directories
+SRC_DIR = .
+BUILD_DIR = build
+BIN_DIR = bin
+
+# Create directories
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
+
+# C compilation
+%.o: %.c
+	$(CC) -c $< -o $@
+
+# C++ compilation  
+%.o: %.cpp
+	$(CXX) -c $< -o $@
+
+# Java compilation
+%.class: %.java
+	$(JAVAC) -d $(BUILD_DIR) $<
+
+# Assembly compilation
+%.o: %.asm
+	$(AS) $(ASM_FLAGS) $< -o $@
+
+# C# compilation
+%.exe: %.cs
+	$(CSC) $< -out:$@
+
+# Go compilation
+%.exe: %.go
+	$(GO) build -o $@ $<
+
+# Kotlin compilation
+%.jar: %.kt
+	$(KOTLIN) -include-runtime -d $@ $<
+
+# Rust compilation
+%.exe: %.rs
+	$(RUST) $< -o $@
+
+# Scala compilation
+%.class: %.scala
+	$(SCALA) -d $(BUILD_DIR) $<
+
+# Swift compilation
+%.exe: %.swift
+	$(SWIFT) $< -o $@
+
+# TypeScript compilation
+%.js: %.ts
+	$(TSC) $< --outFile $@
+
+# Compile all C files
+compile-c: $(BUILD_DIR)
+	@echo "Compiling C files..."
+	@find . -name "*.c" -exec $(CC) -o $(BUILD_DIR)/{} {} \;
+
+# Compile all C++ files
+compile-cpp: $(BUILD_DIR)
+	@echo "Compiling C++ files..."
+	@find . -name "*.cpp" -exec $(CXX) -o $(BUILD_DIR)/{} {} \;
+
+# Compile all Java files
+compile-java: $(BUILD_DIR)
+	@echo "Compiling Java files..."
+	@find . -name "*.java" -exec $(JAVAC) -d $(BUILD_DIR) {} \;
+
+# Compile all TypeScript files
+compile-ts:
+	@echo "Compiling TypeScript files..."
+	@find . -name "*.ts" -exec tsc {} \;
+
+# Compile all Assembly files
+compile-asm: $(BUILD_DIR)
+	@echo "Compiling Assembly files..."
+	@find . -name "*.asm" -exec $(AS) $(ASM_FLAGS) {} -o $(BUILD_DIR)/{}.o \;
+
+# Compile all C# files
+compile-csharp: $(BUILD_DIR)
+	@echo "Compiling C# files..."
+	@find . -name "*.cs" -exec $(CSC) {} -out:$(BUILD_DIR)/{}.exe \;
+
+# Compile all Go files
+compile-go: $(BUILD_DIR)
+	@echo "Compiling Go files..."
+	@find . -name "*.go" -exec $(GO) build -o $(BUILD_DIR)/{} {} \;
+
+# Compile all Kotlin files
+compile-kotlin: $(BUILD_DIR)
+	@echo "Compiling Kotlin files..."
+	@find . -name "*.kt" -exec $(KOTLIN) -include-runtime -d $(BUILD_DIR)/{}.jar {} \;
+
+# Compile all Rust files
+compile-rust: $(BUILD_DIR)
+	@echo "Compiling Rust files..."
+	@find . -name "*.rs" -exec $(RUST) {} -o $(BUILD_DIR)/{} \;
+
+# Compile all Scala files
+compile-scala: $(BUILD_DIR)
+	@echo "Compiling Scala files..."
+	@find . -name "*.scala" -exec $(SCALA) -d $(BUILD_DIR) {} \;
+
+# Compile all Swift files
+compile-swift: $(BUILD_DIR)
+	@echo "Compiling Swift files..."
+	@find . -name "*.swift" -exec $(SWIFT) {} -o $(BUILD_DIR)/{} \;
+
+# Run JavaScript files
+run-js:
+	@echo "Running JavaScript files..."
+	@find . -name "*.js" -exec $(NODE) {} \;
+
+# Run Python files
+run-python:
+	@echo "Running Python files..."
+	@find . -name "*.py" -exec $(PYTHON) {} \;
+
+# Run Java files
+run-java: compile-java
+	@echo "Running Java files..."
+	@find $(BUILD_DIR) -name "*.class" -exec java -cp $(BUILD_DIR) {} \;
+
+# Run C programs
+run-c: compile-c
+	@echo "Running C programs..."
+	@find $(BUILD_DIR) -name "*.c" -exec {} \;
+
+# Run C++ programs
+run-cpp: compile-cpp
+	@echo "Running C++ programs..."
+	@find $(BUILD_DIR) -name "*.cpp" -exec {} \;
+
+# Run Assembly programs
+run-asm: compile-asm
+	@echo "Running Assembly programs..."
+	@find $(BUILD_DIR) -name "*.o" -exec $(CC) {} -o $(BUILD_DIR)/asm_program \;
+	@$(BUILD_DIR)/asm_program
+
+# Run C# programs
+run-csharp: compile-csharp
+	@echo "Running C# programs..."
+	@find $(BUILD_DIR) -name "*.exe" -exec {} \;
+
+# Run Dart programs
+run-dart:
+	@echo "Running Dart programs..."
+	@find . -name "*.dart" -exec $(DART) {} \;
+
+# Run Elixir programs
+run-elixir:
+	@echo "Running Elixir programs..."
+	@find . -name "*.ex" -exec $(ELIXIR) {} \;
+
+# Run Erlang programs
+run-erlang:
+	@echo "Running Erlang programs..."
+	@find . -name "*.erl" -exec $(ERL) -noshell -eval "c:l({}), halt()." {} \;
+
+# Run Go programs
+run-go: compile-go
+	@echo "Running Go programs..."
+	@find $(BUILD_DIR) -name "*.go" -exec {} \;
+
+# Run Kotlin programs
+run-kotlin: compile-kotlin
+	@echo "Running Kotlin programs..."
+	@find $(BUILD_DIR) -name "*.jar" -exec java -jar {} \;
+
+# Run PHP programs
+run-php:
+	@echo "Running PHP programs..."
+	@find . -name "*.php" -exec $(PHP) {} \;
+
+# Run Racket programs
+run-racket:
+	@echo "Running Racket programs..."
+	@find . -name "*.rkt" -exec $(RACKET) {} \;
+
+# Run Ruby programs
+run-ruby:
+	@echo "Running Ruby programs..."
+	@find . -name "*.rb" -exec $(RUBY) {} \;
+
+# Run Rust programs
+run-rust: compile-rust
+	@echo "Running Rust programs..."
+	@find $(BUILD_DIR) -name "*.rs" -exec {} \;
+
+# Run Scala programs
+run-scala: compile-scala
+	@echo "Running Scala programs..."
+	@find $(BUILD_DIR) -name "*.class" -exec scala -cp $(BUILD_DIR) {} \;
+
+# Run Swift programs
+run-swift: compile-swift
+	@echo "Running Swift programs..."
+	@find $(BUILD_DIR) -name "*.swift" -exec {} \;
+
+# Clean build files
+clean:
+	@echo "Cleaning build files..."
+	@rm -rf $(BUILD_DIR)
+	@rm -rf $(BIN_DIR)
+	@find . -name "*.class" -delete
+	@find . -name "*.o" -delete
+	@find . -name "*.exe" -delete
 
 # Install dependencies
 install:
 	@echo "Installing dependencies..."
 	npm install
-	@echo "Dependencies installed successfully!"
 
-# Clean build artifacts
-clean:
-	@echo "Cleaning build artifacts..."
-	rm -rf build/
-	rm -rf dist/
-	rm -rf node_modules/
-	@echo "Clean completed!"
+# Run all algorithms
+run-all: run-js run-python run-java run-c run-cpp run-asm run-csharp run-dart run-elixir run-erlang run-go run-kotlin run-php run-racket run-ruby run-rust run-scala run-swift
 
-# Run tests
-test: test-js test-java test-python
+# Compile all languages
+compile-all: compile-c compile-cpp compile-java compile-ts compile-asm compile-csharp compile-go compile-kotlin compile-rust compile-scala compile-swift
 
-test-js:
-	@echo "Running JavaScript tests..."
-	npm run test
+# Test all algorithms
+test:
+	@echo "Running tests..."
+	npm test
 
-test-java:
-	@echo "Running Java tests..."
-	@if command -v javac >/dev/null 2>&1; then \
-		./scripts/run_java.sh bubble_sort --test; \
-	else \
-		echo "Java not found. Please install Java JDK."; \
-	fi
-
-test-python:
-	@echo "Running Python tests..."
-	@if command -v python3 >/dev/null 2>&1; then \
-		python3 Sorting_Algorithms/Python/bubble_sort.py; \
-	else \
-		echo "Python3 not found. Please install Python 3."; \
-	fi
-
-# Run benchmarks
-benchmark: benchmark-js
-
-benchmark-js:
-	@echo "Running JavaScript benchmarks..."
+# Benchmark all algorithms
+benchmark:
+	@echo "Running benchmarks..."
 	npm run benchmark
 
-# Run algorithms
-run-python:
-	@echo "Running Python implementations..."
-	@if command -v python3 >/dev/null 2>&1; then \
-		python3 Sorting_Algorithms/Python/bubble_sort.py; \
-	else \
-		echo "Python3 not found. Please install Python 3."; \
-	fi
+# Setup environment
+setup: install
+	@echo "Setting up environment..."
+	@mkdir -p $(BUILD_DIR)
+	@mkdir -p $(BIN_DIR)
 
-run-java:
-	@echo "Running Java implementations..."
-	@if command -v javac >/dev/null 2>&1; then \
-		./scripts/run_java.sh bubble_sort; \
-	else \
-		echo "Java not found. Please install Java JDK."; \
-	fi
+# Help
+help:
+	@echo "Available targets:"
+	@echo "  compile-c      - Compile all C files"
+	@echo "  compile-cpp    - Compile all C++ files"
+	@echo "  compile-java   - Compile all Java files"
+	@echo "  compile-ts     - Compile all TypeScript files"
+	@echo "  compile-asm    - Compile all Assembly files"
+	@echo "  compile-csharp - Compile all C# files"
+	@echo "  compile-go     - Compile all Go files"
+	@echo "  compile-kotlin  - Compile all Kotlin files"
+	@echo "  compile-rust   - Compile all Rust files"
+	@echo "  compile-scala  - Compile all Scala files"
+	@echo "  compile-swift  - Compile all Swift files"
+	@echo "  compile-all    - Compile all supported languages"
+	@echo "  run-js         - Run all JavaScript files"
+	@echo "  run-python     - Run all Python files"
+	@echo "  run-java       - Compile and run all Java files"
+	@echo "  run-c          - Compile and run all C files"
+	@echo "  run-cpp        - Compile and run all C++ files"
+	@echo "  run-asm        - Compile and run all Assembly files"
+	@echo "  run-csharp     - Compile and run all C# files"
+	@echo "  run-dart       - Run all Dart files"
+	@echo "  run-elixir     - Run all Elixir files"
+	@echo "  run-erlang     - Run all Erlang files"
+	@echo "  run-go         - Compile and run all Go files"
+	@echo "  run-kotlin     - Compile and run all Kotlin files"
+	@echo "  run-php        - Run all PHP files"
+	@echo "  run-racket     - Run all Racket files"
+	@echo "  run-ruby       - Run all Ruby files"
+	@echo "  run-rust       - Compile and run all Rust files"
+	@echo "  run-scala      - Compile and run all Scala files"
+	@echo "  run-swift      - Compile and run all Swift files"
+	@echo "  run-all        - Run all algorithms"
+	@echo "  test           - Run tests"
+	@echo "  benchmark      - Run benchmarks"
+	@echo "  clean          - Clean build files"
+	@echo "  install        - Install dependencies"
+	@echo "  setup          - Setup environment"
+	@echo "  help           - Show this help"
 
-run-js:
-	@echo "Running JavaScript implementations..."
-	@if command -v node >/dev/null 2>&1; then \
-		./scripts/run_js.sh bubble_sort; \
-	else \
-		echo "Node.js not found. Please install Node.js."; \
-	fi
-
-run-all:
-	@echo "Running all implementations..."
-	@if command -v python3 >/dev/null 2>&1; then \
-		echo "--- Python Implementation ---"; \
-		python3 Sorting_Algorithms/Python/bubble_sort.py; \
-		echo ""; \
-	fi
-	@if command -v javac >/dev/null 2>&1; then \
-		echo "--- Java Implementation ---"; \
-		./scripts/run_java.sh bubble_sort; \
-		echo ""; \
-	fi
-	@if command -v node >/dev/null 2>&1; then \
-		echo "--- JavaScript Implementation ---"; \
-		./scripts/run_js.sh bubble_sort; \
-	fi
-
-# Specific algorithms
-bubble-sort:
-	@echo "Running Bubble Sort in all languages..."
-	@$(MAKE) run-all
-
-quick-sort:
-	@echo "Quick Sort implementation coming soon..."
-
-merge-sort:
-	@echo "Merge Sort implementation coming soon..."
-
-heap-sort:
-	@echo "Heap Sort implementation coming soon..."
-
-binary-search:
-	@echo "Binary Search implementation coming soon..."
-
-# Development tools
-lint:
-	@echo "Running linter..."
-	npm run lint
-
-format:
-	@echo "Formatting code..."
-	npm run format
-
-build: clean install lint test
-	@echo "Build completed successfully!"
-
-# Platform-specific targets
-ifeq ($(OS),Windows_NT)
-    # Windows specific commands
-    run-java-windows:
-		scripts\run_java.bat bubble_sort
-    run-js-windows:
-		scripts\run_js.bat bubble_sort
-    run-all-windows:
-		scripts\run_all.bat all bubble_sort
-else
-    # Unix/Linux specific commands
-    run-java-unix:
-		./scripts/run_java.sh bubble_sort
-    run-js-unix:
-		./scripts/run_js.sh bubble_sort
-    run-all-unix:
-		./scripts/run_all.sh all bubble_sort
-endif
+.PHONY: all clean install setup test benchmark help

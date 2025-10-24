@@ -1,108 +1,313 @@
-# Kho tàng thuật toán
+# Algorithms Collection
 
-Chào mừng bạn đến với kho tàng thuật toán! Dự án này nhằm mục đích cung cấp một bộ sưu tập toàn diện các thuật toán, được triển khai bằng Python, cùng với các giải thích chi tiết, mã giả, hướng tiếp cận và các ứng dụng trong thế giới thực.
+A comprehensive collection of algorithms implemented in multiple programming languages including JavaScript, Python, Java, C, C++, and Assembly.
 
-## Cấu trúc
+## 🚀 Features
 
-Dự án này được tổ chức thành các danh mục, mỗi danh mục đại diện cho một loại thuật toán khác nhau. Trong mỗi danh mục, bạn sẽ tìm thấy các triển khai riêng lẻ của các thuật toán cụ thể.
+- **Multi-language Support**: JavaScript, Python, Java, C, C++, Assembly
+- **Comprehensive Coverage**: Sorting, Searching, Graph, Dynamic Programming, Machine Learning, and more
+- **Cross-platform**: Works on Windows, macOS, and Linux
+- **Easy Compilation**: Automated build system with Makefile
+- **Testing Framework**: Built-in testing and benchmarking tools
 
-## Danh mục thuật toán
+## 📁 Project Structure
 
-### 1. Thuật toán tìm kiếm (Search Algorithms)
+```
+algorithms-collection/
+├── Sorting_Algorithms/          # Sorting algorithms
+├── Search_Algorithms/           # Search algorithms
+├── Graph_Algorithms/            # Graph algorithms
+├── Dynamic_Programming/          # DP algorithms
+├── Machine_Learning_Algorithms/ # ML algorithms
+├── Mathematical_Algorithms/     # Math algorithms
+├── String_Algorithms/           # String algorithms
+├── Cryptographic_Algorithms/   # Crypto algorithms
+├── Other_Algorithms/            # Other algorithms
+├── scripts/                     # Build and test scripts
+├── Makefile                     # Build configuration
+├── package.json                 # Node.js dependencies
+└── README.md                    # This file
+```
 
-*   [Tìm kiếm tuyến tính (Linear Search)](Search_Algorithms/Linear_Search.md)
-*   [Tìm kiếm nhị phân (Binary Search)](Search_Algorithms/Binary_Search.md)
-*   [Tìm kiếm theo chiều sâu (DFS)](Search_Algorithms/DFS.md)
-*   [Tìm kiếm theo chiều rộng (BFS)](Search_Algorithms/BFS.md)
-*   [Tìm kiếm A* (A* Search)](Search_Algorithms/A_Star_Search.md)
-*   [Tìm kiếm nhảy (Jump Search)](Search_Algorithms/Jump_Search.md)
-*   [Tìm kiếm nội suy (Interpolation Search)](Search_Algorithms/Interpolation_Search.md)
+## 🛠️ Setup
 
-### 2. Thuật toán sắp xếp (Sorting Algorithms)
+### Prerequisites
 
-*   [Sắp xếp nổi bọt (Bubble Sort)](Sorting_Algorithms/Bubble_Sort.md)
-*   [Sắp xếp chọn (Selection Sort)](Sorting_Algorithms/Selection_Sort.md)
-*   [Sắp xếp chèn (Insertion Sort)](Sorting_Algorithms/Insertion_Sort.md)
-*   [Sắp xếp nhanh (Quick Sort)](Sorting_Algorithms/Quick_Sort.md)
-*   [Sắp xếp trộn (Merge Sort)](Sorting_Algorithms/Merge_Sort.md)
-*   [Sắp xếp vun đống (Heap Sort)](Sorting_Algorithms/Heap_Sort.md)
-*   [Sắp xếp đếm (Counting Sort)](Sorting_Algorithms/Counting_Sort.md)
-*   [Sắp xếp cơ số (Radix Sort)](Sorting_Algorithms/Radix_Sort.md)
-*   [Sắp xếp xô (Bucket Sort)](Sorting_Algorithms/Bucket_Sort.md)
+- **Node.js** (v14+)
+- **Python** (v3.6+)
+- **Java** (JDK 8+)
+- **GCC/G++** (for C/C++)
+- **NASM** (for Assembly)
+- **Make** (optional, for Makefile)
 
-### 3. Thuật toán đồ thị (Graph Algorithms)
+### Installation
 
-*   [Thuật toán Dijkstra](Graph_Algorithms/Dijkstra.md)
-*   [Thuật toán Bellman-Ford](Graph_Algorithms/Bellman_Ford.md)
-*   [Thuật toán Floyd-Warshall](Graph_Algorithms/Floyd_Warshall.md)
-*   [Thuật toán Kruskal](Graph_Algorithms/Kruskal.md)
-*   [Thuật toán Prim](Graph_Algorithms/Prim.md)
-*   [Sắp xếp Topo (Topological Sort)](Graph_Algorithms/Topological_Sort.md)
-*   [Thuật toán Kosaraju](Graph_Algorithms/Kosaraju.md)
+1. **Clone the repository**
 
-### 4. Thuật toán quy hoạch động (Dynamic Programming)
+   ```bash
+   git clone <repository-url>
+   cd algorithms-collection
+   ```
 
-*   [Dãy con tăng dài nhất (Longest Increasing Subsequence)](Dynamic_Programming/Longest_Increasing_Subsequence.md)
-*   [Bài toán cái túi (Knapsack Problem)](Dynamic_Programming/Knapsack_Problem.md)
-*   [Dãy Fibonacci](Dynamic_Programming/Fibonacci_Sequence.md)
-*   [Chỉnh sửa khoảng cách (Edit Distance)](Dynamic_Programming/Edit_Distance.md)
-*   [Bài toán đường đi dài nhất (Longest Path Problem)](Dynamic_Programming/Longest_Path_Problem.md)
+2. **Install dependencies**
 
-### 5. Thuật toán tham lam (Greedy Algorithms)
+   ```bash
+   npm install
+   ```
 
-*   [Thuật toán Huffman](Greedy_Algorithms/Huffman_Coding.md)
-*   [Thuật toán chọn hoạt động (Activity Selection)](Greedy_Algorithms/Activity_Selection.md)
-*   [Thuật toán Fractional Knapsack](Greedy_Algorithms/Fractional_Knapsack.md)
+3. **Setup environment**
+   ```bash
+   npm run setup
+   ```
 
-### 6. Thuật toán chia để trị (Divide and Conquer)
+## 🏃‍♂️ Running Algorithms
 
-*   [Thuật toán Strassen](Divide_and_Conquer/Strassen_Algorithm.md)
-*   [Chuyển đổi Fourier nhanh (Fast Fourier Transform - FFT)](Divide_and_Conquer/Fast_Fourier_Transform.md)
+### Using npm scripts
 
-### 7. Thuật toán ngẫu nhiên (Randomized Algorithms)
+```bash
+# Run all algorithms
+npm run run-all
 
-*   [Quick Sort ngẫu nhiên (Randomized Quick Sort)](Randomized_Algorithms/Randomized_Quick_Sort.md)
-*   [Thuật toán Karger](Randomized_Algorithms/Karger_Algorithm.md)
-*   [Thuật toán Monte Carlo](Randomized_Algorithms/Monte_Carlo_Algorithm.md)
-*   [Thuật toán Las Vegas](Randomized_Algorithms/Las_Vegas_Algorithm.md)
+# Run specific language
+npm run run-js      # JavaScript
+npm run run-python  # Python
+npm run run-java    # Java
+npm run run-c       # C
+npm run run-cpp     # C++
+npm run run-asm     # Assembly
 
-### 8. Thuật toán học máy (Machine Learning Algorithms)
+# Test all algorithms
+npm test
 
-*   [Hồi quy tuyến tính (Linear Regression)](Machine_Learning_Algorithms/Linear_Regression.md)
-*   [Hồi quy logistic (Logistic Regression)](Machine_Learning_Algorithms/Logistic_Regression.md)
-*   [K-Means Clustering](Machine_Learning_Algorithms/K_Means_Clustering.md)
-*   [Cây quyết định (Decision Trees)](Machine_Learning_Algorithms/Decision_Trees.md)
-*   [Rừng ngẫu nhiên (Random Forest)](Machine_Learning_Algorithms/Random_Forest.md)
-*   [Mạng nơ-ron (Neural Networks)](Machine_Learning_Algorithms/Neural_Networks.md)
-*   [Máy vector hỗ trợ (Support Vector Machines - SVM)](Machine_Learning_Algorithms/Support_Vector_Machines.md)
-*   [Gradient Boosting (XGBoost, LightGBM)](Machine_Learning_Algorithms/Gradient_Boosting.md)
+# Benchmark performance
+npm run benchmark
+```
 
-### 9. Thuật toán mã hóa và nén (Cryptographic and Compression)
+### Using Makefile
 
-*   [RSA](Cryptographic_and_Compression_Algorithms/RSA.md)
-*   [AES (Advanced Encryption Standard)](Cryptographic_and_Compression_Algorithms/AES.md)
-*   [SHA (Secure Hash Algorithm)](Cryptographic_and_Compression_Algorithms/SHA.md)
-*   [LZW Compression](Cryptographic_and_Compression_Algorithms/LZW_Compression.md)
-*   [Huffman Coding](Greedy_Algorithms/Huffman_Coding.md)
+```bash
+# Compile all languages
+make compile-all
 
-### 10. Thuật toán xử lý chuỗi (String Algorithms)
+# Compile specific language
+make compile-c      # C
+make compile-cpp    # C++
+make compile-java   # Java
+make compile-asm    # Assembly
 
-*   [Knuth-Morris-Pratt (KMP)](String_Algorithms/KMP_Algorithm.md)
-*   [Boyer-Moore](String_Algorithms/Boyer_Moore.md)
-*   [Rabin-Karp](String_Algorithms/Rabin_Karp.md)
-*   [Z Algorithm](String_Algorithms/Z_Algorithm.md)
-*   [Trie (Prefix Tree)](String_Algorithms/Trie_Algorithm.md)
+# Run all algorithms
+make run-all
 
-### 11. Thuật toán số học và toán học (Mathematical Algorithms)
+# Run specific language
+make run-js         # JavaScript
+make run-python     # Python
+make run-java       # Java
+make run-c          # C
+make run-cpp        # C++
+make run-asm        # Assembly
 
-*   [Sàng Eratosthenes](Mathematical_Algorithms/Sieve_of_Eratosthenes.md)
-*   [Thuật toán Euclid](Mathematical_Algorithms/Euclidean_Algorithm.md)
-*   [Thuật toán bình phương và nhân (Exponentiation by Squaring)](Mathematical_Algorithms/Exponentiation_by_Squaring.md)
-*   [Thuật toán Miller-Rabin](Mathematical_Algorithms/Miller_Rabin_Test.md)
+# Clean build files
+make clean
 
-### 12. Thuật toán khác
+# Show help
+make help
+```
 
-*   [Backtracking](Other_Algorithms/Backtracking.md)
-*   [Branch and Bound](Other_Algorithms/Branch_and_Bound.md)
-*   [Genetic Algorithms](Other_Algorithms/Genetic_Algorithms.md)
-*   [Simulated Annealing](Other_Algorithms/Simulated_Annealing.md)
+### Using Node.js scripts directly
+
+```bash
+# Run all algorithms
+node scripts/run_all.js
+
+# Run with specific options
+node scripts/run_all.js --all --verbose --x86
+```
+
+## 🔧 Assembly Support
+
+The project includes comprehensive Assembly support for multiple architectures:
+
+### Supported Architectures
+
+- **x86** (32-bit Intel/AMD)
+- **x64** (64-bit Intel/AMD)
+- **ARM** (32-bit ARM)
+- **ARM64** (64-bit ARM)
+
+### Assembly Compilation
+
+```bash
+# Compile for x64 (default)
+make compile-asm
+
+# Compile for x86
+node scripts/assembly_compiler.js --arch x86
+
+# Compile for ARM
+node scripts/assembly_compiler.js --arch arm
+```
+
+### Assembly File Structure
+
+Assembly files should follow this structure:
+
+```assembly
+; Algorithm: [Algorithm Name]
+; Language: Assembly (x64)
+; Description: [Brief description]
+
+section .data
+    ; Data section
+
+section .text
+    global _start
+
+_start:
+    ; Main algorithm implementation
+    mov rax, 60    ; sys_exit
+    mov rdi, 0     ; exit status
+    syscall
+```
+
+## 📊 Algorithm Categories
+
+### Sorting Algorithms
+
+- Bubble Sort
+- Selection Sort
+- Insertion Sort
+- Merge Sort
+- Quick Sort
+- Heap Sort
+- Counting Sort
+- Radix Sort
+- Bucket Sort
+
+### Search Algorithms
+
+- Linear Search
+- Binary Search
+- Jump Search
+- Interpolation Search
+- DFS (Depth-First Search)
+- BFS (Breadth-First Search)
+- A\* Search
+
+### Graph Algorithms
+
+- Dijkstra's Algorithm
+- Bellman-Ford Algorithm
+- Floyd-Warshall Algorithm
+- Kruskal's Algorithm
+- Prim's Algorithm
+- Topological Sort
+- Kosaraju's Algorithm
+
+### Dynamic Programming
+
+- Fibonacci Sequence
+- Knapsack Problem
+- Edit Distance
+- Longest Increasing Subsequence
+- Longest Path Problem
+
+### Machine Learning
+
+- Linear Regression
+- Logistic Regression
+- Decision Trees
+- Random Forest
+- Support Vector Machines
+- K-Means Clustering
+- Neural Networks
+- Gradient Boosting
+
+### Mathematical Algorithms
+
+- Euclidean Algorithm
+- Exponentiation by Squaring
+- Miller-Rabin Test
+- Sieve of Eratosthenes
+
+### String Algorithms
+
+- KMP Algorithm
+- Boyer-Moore Algorithm
+- Rabin-Karp Algorithm
+- Z Algorithm
+- Trie Algorithm
+
+### Cryptographic Algorithms
+
+- AES (Advanced Encryption Standard)
+- RSA (Rivest-Shamir-Adleman)
+- SHA (Secure Hash Algorithm)
+- LZW Compression
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+npm test
+
+# Run specific language tests
+npm run test-js
+npm run test-python
+npm run test-java
+```
+
+## 📈 Benchmarking
+
+```bash
+# Run performance benchmarks
+npm run benchmark
+
+# Benchmark specific algorithm
+npm run benchmark -- --algorithm="quick_sort"
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Implement your algorithm
+4. Add tests
+5. Submit a pull request
+
+### Adding New Algorithms
+
+1. **Choose the appropriate category folder**
+2. **Create files for each language you want to support**
+3. **Follow the naming convention**: `algorithm_name.js`, `algorithm_name.py`, etc.
+4. **Include proper documentation and comments**
+5. **Add test cases**
+
+### Code Style Guidelines
+
+- Use meaningful variable names
+- Add comprehensive comments
+- Include time and space complexity
+- Follow language-specific conventions
+- Include usage examples
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Contributors who have implemented various algorithms
+- Open source community for inspiration and resources
+- Educational institutions for algorithm research
+
+## 📞 Support
+
+If you encounter any issues or have questions:
+
+1. Check the [Issues](https://github.com/your-username/algorithms-collection/issues) page
+2. Create a new issue with detailed description
+3. Contact the maintainers
+
+---
+
+**Happy Coding! 🎉**
