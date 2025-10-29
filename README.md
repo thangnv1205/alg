@@ -173,76 +173,76 @@ _start:
 
 ### Sorting Algorithms
 
-- Bubble Sort
-- Selection Sort
-- Insertion Sort
-- Merge Sort
-- Quick Sort
-- Heap Sort
-- Counting Sort
-- Radix Sort
-- Bucket Sort
+- [Bubble Sort](./Sorting_Algorithms/)
+- [Selection Sort](./Sorting_Algorithms/)
+- [Insertion Sort](./Sorting_Algorithms/)
+- [Merge Sort](./Sorting_Algorithms/)
+- [Quick Sort](./Sorting_Algorithms/)
+- [Heap Sort](./Sorting_Algorithms/)
+- [Counting Sort](./Sorting_Algorithms/)
+- [Radix Sort](./Sorting_Algorithms/)
+- [Bucket Sort](./Sorting_Algorithms/)
 
 ### Search Algorithms
 
-- Linear Search
-- Binary Search
-- Jump Search
-- Interpolation Search
-- DFS (Depth-First Search)
-- BFS (Breadth-First Search)
-- A\* Search
+- [Linear Search](./Search_Algorithms/)
+- [Binary Search](./Search_Algorithms/)
+- [Jump Search](./Search_Algorithms/)
+- [Interpolation Search](./Search_Algorithms/)
+- [DFS (Depth-First Search)](./Graph_Algorithms/)
+- [BFS (Breadth-First Search)](./Graph_Algorithms/)
+- [A\* Search](./Graph_Algorithms/)
 
 ### Graph Algorithms
 
-- Dijkstra's Algorithm
-- Bellman-Ford Algorithm
-- Floyd-Warshall Algorithm
-- Kruskal's Algorithm
-- Prim's Algorithm
-- Topological Sort
-- Kosaraju's Algorithm
+- [Dijkstra's Algorithm](./Graph_Algorithms/)
+- [Bellman-Ford Algorithm](./Graph_Algorithms/)
+- [Floyd-Warshall Algorithm](./Graph_Algorithms/)
+- [Kruskal's Algorithm](./Graph_Algorithms/)
+- [Prim's Algorithm](./Graph_Algorithms/)
+- [Topological Sort](./Graph_Algorithms/)
+- [Kosaraju's Algorithm](./Graph_Algorithms/)
 
 ### Dynamic Programming
 
-- Fibonacci Sequence
-- Knapsack Problem
-- Edit Distance
-- Longest Increasing Subsequence
-- Longest Path Problem
+- [Fibonacci Sequence](./Dynamic_Programming/)
+- [Knapsack Problem](./Dynamic_Programming/)
+- [Edit Distance](./Dynamic_Programming/)
+- [Longest Increasing Subsequence](./Dynamic_Programming/)
+- [Longest Path Problem](./Dynamic_Programming/)
 
 ### Machine Learning
 
-- Linear Regression
-- Logistic Regression
-- Decision Trees
-- Random Forest
-- Support Vector Machines
-- K-Means Clustering
-- Neural Networks
-- Gradient Boosting
+- [Linear Regression](./Machine_Learning_Algorithms/)
+- [Logistic Regression](./Machine_Learning_Algorithms/)
+- [Decision Trees](./Machine_Learning_Algorithms/)
+- [Random Forest](./Machine_Learning_Algorithms/)
+- [Support Vector Machines](./Machine_Learning_Algorithms/)
+- [K-Means Clustering](./Machine_Learning_Algorithms/)
+- [Neural Networks](./Machine_Learning_Algorithms/)
+- [Gradient Boosting](./Machine_Learning_Algorithms/)
 
 ### Mathematical Algorithms
 
-- Euclidean Algorithm
-- Exponentiation by Squaring
-- Miller-Rabin Test
-- Sieve of Eratosthenes
+- [Euclidean Algorithm](./Mathematical_Algorithms/)
+- [Exponentiation by Squaring](./Mathematical_Algorithms/)
+- [Miller-Rabin Test](./Mathematical_Algorithms/)
+- [Sieve of Eratosthenes](./Mathematical_Algorithms/)
 
 ### String Algorithms
 
-- KMP Algorithm
-- Boyer-Moore Algorithm
-- Rabin-Karp Algorithm
-- Z Algorithm
-- Trie Algorithm
+- [KMP Algorithm](./String_Algorithms/)
+- [Boyer-Moore Algorithm](./String_Algorithms/)
+- [Rabin-Karp Algorithm](./String_Algorithms/)
+- [Z Algorithm](./String_Algorithms/)
+- [Trie Algorithm](./String_Algorithms/)
 
 ### Cryptographic Algorithms
 
-- AES (Advanced Encryption Standard)
-- RSA (Rivest-Shamir-Adleman)
-- SHA (Secure Hash Algorithm)
-- LZW Compression
+- [AES (Advanced Encryption Standard)](./Cryptographic_Algorithms/)
+- [RSA (Rivest-Shamir-Adleman)](./Cryptographic_Algorithms/)
+- [SHA (Secure Hash Algorithm)](./Cryptographic_Algorithms/)
+- [LZW Compression](./Cryptographic_Algorithms/)
 
 ## 🧪 Testing
 
